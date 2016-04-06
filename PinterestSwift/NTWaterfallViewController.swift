@@ -9,33 +9,12 @@
 import UIKit
 
 let waterfallViewCellIdentify = "waterfallViewCellIdentify"
-
-class NavigationControllerDelegate: NSObject, UINavigationControllerDelegate{
-    func navigationController(navigationController: UINavigationController, animationControllerForOperation operation: UINavigationControllerOperation, fromViewController fromVC: UIViewController, toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?{
-        
-        let fromVCConfromA = (fromVC as? NTTransitionProtocol)
-        let fromVCConfromB = (fromVC as? NTWaterFallViewControllerProtocol)
-        let fromVCConfromC = (fromVC as? NTHorizontalPageViewControllerProtocol)
-        
-        let toVCConfromA = (toVC as? NTTransitionProtocol)
-        let toVCConfromB = (toVC as? NTWaterFallViewControllerProtocol)
-        let toVCConfromC = (toVC as? NTHorizontalPageViewControllerProtocol)
-        if((fromVCConfromA != nil)&&(toVCConfromA != nil)&&(
-            (fromVCConfromB != nil && toVCConfromC != nil)||(fromVCConfromC != nil && toVCConfromB != nil))){
-            let transition = NTTransition()
-            transition.presenting = operation == .Pop
-            return  transition
-        }else{
-            return nil
-        }
-        
-    }
-}
+let animationScale = screenWidth/gridWidth // screenWidth / the width of waterfall
 
 class NTWaterfallViewController:UICollectionViewController,CHTCollectionViewDelegateWaterfallLayout, NTTransitionProtocol, NTWaterFallViewControllerProtocol{
 //    class var sharedInstance: NSInteger = 0 Are u kidding me?
     var imageNameList : Array <NSString> = []
-    let delegateHolder = NavigationControllerDelegate()
+    let delegateHolder = TPCTransition(transition: TPCCollectionToPageZoomTransition(duration: 0.35, zoomScale: animationScale))
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
